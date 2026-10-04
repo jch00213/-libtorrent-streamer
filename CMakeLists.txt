@@ -30,8 +30,9 @@ if(TARGET Boost::headers)
     set(Boost_INCLUDE_DIR "${Boost_INCLUDE_DIR}" CACHE PATH "Boost include directory" FORCE)
 endif()
 
-# 2. Disable WebTorrent to bypass OpenSSL/libdatachannel requirements
+# 2. Disable WebTorrent and force built-in crypto to bypass OpenSSL requirements
 set(webtorrent OFF CACHE BOOL "" FORCE)
+set(crypto "built-in" CACHE STRING "" FORCE)
 
 # 3. Fetch libtorrent-rasterbar
 FetchContent_Declare(
