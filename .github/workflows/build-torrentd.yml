@@ -16,9 +16,8 @@ jobs:
 
     - name: Set up Environment
       run: |
-        # Ubuntu runners have the Android NDK preinstalled under ANDROID_HOME/ndk
-        # Let's locate and export ANDROID_NDK_HOME explicitly
-        export ANDROID_NDK_HOME=$ANDROID_HOME/ndk/$(ls $ANDROID_HOME/ndk)
+        NDK_VERSION=$(ls $ANDROID_HOME/ndk | sort -V | tail -n 1)
+        ANDROID_NDK_HOME="$ANDROID_HOME/ndk/$NDK_VERSION"
         echo "ANDROID_NDK_HOME=$ANDROID_NDK_HOME" >> $GITHUB_ENV
         echo "Using NDK at: $ANDROID_NDK_HOME"
 
