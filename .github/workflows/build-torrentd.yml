@@ -14,12 +14,13 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
-    - name: Setup Android NDK
-      uses: nttld/setup-ndk@v3
-      with:
-        ndk-version: r26b
-        android-platform: 24
-        add-to-path: true
+    - name: Set up Environment
+      run: |
+        # Ubuntu runners have the Android NDK preinstalled under ANDROID_HOME/ndk
+        # Let's locate and export ANDROID_NDK_HOME explicitly
+        export ANDROID_NDK_HOME=$ANDROID_HOME/ndk/$(ls $ANDROID_HOME/ndk)
+        echo "ANDROID_NDK_HOME=$ANDROID_NDK_HOME" >> $GITHUB_ENV
+        echo "Using NDK at: $ANDROID_NDK_HOME"
 
     - name: Configure CMake
       run: |
