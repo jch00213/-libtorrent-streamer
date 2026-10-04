@@ -9,7 +9,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -flto -DNDEBUG")
 
 include(FetchContent)
 
-# 1. Fetch Boost (using a stable release tag)
+# 1. Fetch Boost
 FetchContent_Declare(
     boost
     GIT_REPOSITORY https://github.com/boostorg/boost.git
@@ -19,7 +19,10 @@ set(BOOST_INCLUDE_LIBRARIES system)
 set(BOOST_ENABLE_CMAKE ON)
 FetchContent_MakeAvailable(boost)
 
-# 2. Fetch libtorrent-rasterbar
+# 2. Disable WebTorrent to bypass libdatachannel and OpenSSL requirements
+set(webtorrent OFF CACHE BOOL "" FORCE)
+
+# 3. Fetch libtorrent-rasterbar
 FetchContent_Declare(
     libtorrent
     GIT_REPOSITORY https://github.com/arvidn/libtorrent.git
@@ -29,7 +32,7 @@ set(build_examples OFF)
 set(build_tests OFF)
 FetchContent_MakeAvailable(libtorrent)
 
-# 3. Your core executable binary
+# 4. Your core executable binary
 add_executable(torrentd
     src/main.cpp
 )
