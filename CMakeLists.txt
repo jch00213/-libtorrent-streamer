@@ -4,6 +4,11 @@ project(torrentd CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# Suppress CMP0167 warning regarding FindBoost removal in modern CMake
+if(POLICY CMP0167)
+    cmake_policy(SET CMP0167 OLD)
+endif()
+
 # Optimization flags for ARM64 / Tensor G4
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -flto -DNDEBUG")
 
@@ -19,12 +24,13 @@ set(BOOST_INCLUDE_LIBRARIES system)
 set(BOOST_ENABLE_CMAKE ON)
 FetchContent_MakeAvailable(boost)
 
-# Expose Boost directories globally so libtorrent's find_package finds it
+# Bridge modern Boost target to the variables libtorrent's old FindBoost macro looks for
 if(TARGET Boost::headers)
-    set(Boost_INCLUDE_DIRS $<TARGET_PROPERTY:Boost::headers,INTERFACE_INCLUDE_DIRECTORIES>)
+    get_target_property(Boost_INCLUDE_DIR Boost::headers INTERFACE_INCLUDE_DIRECTORIES)
+    set(Boost_INCLUDE_DIR "${Boost_INCLUDE_DIR}" CACHE PATH "Boost include directory" FORCE)
 endif()
 
-# 2. Disable WebTorrent to bypass OpenSSL/libdatachannel
+# 2. Disable WebTorrent to bypass OpenSSL/libdatachannel requirements
 set(webtorrent OFF CACHE BOOL "" FORCE)
 
 # 3. Fetch libtorrent-rasterbar
