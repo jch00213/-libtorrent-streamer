@@ -19,7 +19,12 @@ set(BOOST_INCLUDE_LIBRARIES system)
 set(BOOST_ENABLE_CMAKE ON)
 FetchContent_MakeAvailable(boost)
 
-# 2. Disable WebTorrent to bypass libdatachannel and OpenSSL requirements
+# Expose Boost directories globally so libtorrent's find_package finds it
+if(TARGET Boost::headers)
+    set(Boost_INCLUDE_DIRS $<TARGET_PROPERTY:Boost::headers,INTERFACE_INCLUDE_DIRECTORIES>)
+endif()
+
+# 2. Disable WebTorrent to bypass OpenSSL/libdatachannel
 set(webtorrent OFF CACHE BOOL "" FORCE)
 
 # 3. Fetch libtorrent-rasterbar
