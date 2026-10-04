@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(streamer_engine CXX)
+project(torrentd CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -7,16 +7,34 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Optimization flags for ARM64 / Tensor G4
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -flto -DNDEBUG")
 
-# Include directories (assuming Boost and libtorrent are fetched or included via FetchContent)
-# For a production repo, you can use FetchContent or submodule them.
-find_package(Boost REQUIRED COMPONENTS system)
+include(FetchContent)
 
-add_executable(streamer_engine
+# 1. Fetch Boost (using a stable release tag)
+FetchContent_Declare(
+    boost
+    GIT_REPOSITORY https://github.com/boostorg/boost.git
+    GIT_TAG        boost-1.92.0
+)
+set(BOOST_INCLUDE_LIBRARIES system)
+set(BOOST_ENABLE_CMAKE ON)
+FetchContent_MakeAvailable(boost)
+
+# 2. Fetch libtorrent-rasterbar
+FetchContent_Declare(
+    libtorrent
+    GIT_REPOSITORY https://github.com/arvidn/libtorrent.git
+    GIT_TAG        v2.1.2
+)
+set(build_examples OFF)
+set(build_tests OFF)
+FetchContent_MakeAvailable(libtorrent)
+
+# 3. Your core executable binary
+add_executable(torrentd
     src/main.cpp
 )
 
-target_link_libraries(streamer_engine
+target_link_libraries(torrentd
     PRIVATE
-    Boost::system
-    # libtorrent target goes here
+    libtorrent
 )
