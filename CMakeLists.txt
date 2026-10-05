@@ -14,19 +14,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -flto -DNDEBUG")
 
 include(FetchContent)
 
-# 1. Fetch and build OpenSSL for Android via openssl-cmake
-FetchContent_Declare(
-    openssl_cmake
-    GIT_REPOSITORY https://github.com/viaduck/openssl-cmake.git
-    GIT_TAG        main
-)
-set(CROSS ON)
-set(CROSS_ANDROID ON)
-set(BUILD_OPENSSL ON)
-set(OPENSSL_BUILD_VERSION "3.1.5")
-FetchContent_MakeAvailable(openssl_cmake)
-
-# 2. Fetch Boost
+# 1. Fetch Boost
 FetchContent_Declare(
     boost
     GIT_REPOSITORY https://github.com/boostorg/boost.git
@@ -41,6 +29,10 @@ if(TARGET Boost::headers)
     get_target_property(Boost_INCLUDE_DIR Boost::headers INTERFACE_INCLUDE_DIRECTORIES)
     set(Boost_INCLUDE_DIR "${Boost_INCLUDE_DIR}" CACHE PATH "Boost include directory" FORCE)
 endif()
+
+# 2. Configure libtorrent to use built-in crypto and disable WebTorrent
+set(crypto "built-in" CACHE STRING "" FORCE)
+set(webtorrent OFF CACHE BOOL "" FORCE)
 
 # 3. Fetch libtorrent-rasterbar (v2.1.2)
 FetchContent_Declare(
@@ -60,6 +52,4 @@ add_executable(torrentd
 target_link_libraries(torrentd
     PRIVATE
     libtorrent
-    ssl
-    crypto
 )
