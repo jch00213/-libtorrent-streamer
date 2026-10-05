@@ -40,12 +40,15 @@ set(build_examples OFF)
 set(build_tests OFF)
 FetchContent_MakeAvailable(libtorrent)
 
-# 4. Your core executable binary
-add_executable(torrentd
+# 4. Build as a SHARED library for Android JNI loading
+add_library(torrentd SHARED
     src/main.cpp
 )
 
-# FIXED: Link against the correct CMake target exported by the library
+# Required for shared libraries linking static dependencies on Android 16
+set_property(TARGET torrentd PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+# Link libtorrent-rasterbar statically into libtorrentd.so
 target_link_libraries(torrentd
     PRIVATE
     torrent-rasterbar
