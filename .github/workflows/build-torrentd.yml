@@ -30,12 +30,16 @@ jobs:
           -DANDROID_PLATFORM=android-24 \
           -DCMAKE_BUILD_TYPE=Release
 
-    - name: Build Shared Library
+    - name: Build Executable
       run: |
         cmake --build build --config Release -j$(nproc)
+
+    - name: Prepare for Android 16 jniLibs (.so extension)
+      run: |
+        cp build/torrentd build/libtorrentd.so
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: native-lib-arm64-v8a
+        name: native-binary-arm64-v8a
         path: build/libtorrentd.so
