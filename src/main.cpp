@@ -2,7 +2,6 @@
 #include <libtorrent/add_torrent_params.hpp>
 #include <libtorrent/torrent_handle.hpp>
 #include <libtorrent/alert_types.hpp>
-#include <libtorrent/parse_magnet_uri.hpp>
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -27,7 +26,7 @@ int main(int argc, char* argv[]) {
 
     libtorrent::add_torrent_params atp;
     try {
-        // parse_magnet_uri takes only the URI string and throws on error in libtorrent 2.x
+        // parse_magnet_uri is exposed via add_torrent_params.hpp in libtorrent 2.x
         atp = libtorrent::parse_magnet_uri(magnet);
     } catch (libtorrent::system_error const& e) {
         std::cerr << "Failed to parse magnet URI: " << e.what() << "\n";
