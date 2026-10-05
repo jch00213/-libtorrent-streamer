@@ -25,14 +25,18 @@ int main(int argc, char* argv[]) {
 
     libtorrent::session ses(pack);
 
-    libtorrent::error_code ec;
-    libtorrent::add_torrent_params atp = libtorrent::parse_magnet_uri(magnet, ec);
-    if (ec) {
-        std::cerr << "Failed to parse magnet URI: " << ec.message() << "\n";
+    libtorrent::add_torrent_params atp;
+    try {
+        // parse_magnet_uri takes only the URI string and throws on error in libtorrent 2.x
+        atp = libtorrent::parse_magnet_uri(magnet);
+    } catch (libtorrent::system_error const& e) {
+        std::cerr << "Failed to parse magnet URI: " << e.what() << "\n";
         return 1;
     }
 
     atp.save_path = save_path;
+    
+    libtorrent::error_code ec;
     libtorrent::torrent_handle h = ses.add_torrent(atp, ec);
     if (ec) {
         std::cerr << "Failed to add torrent: " << ec.message() << "\n";
