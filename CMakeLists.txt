@@ -24,11 +24,9 @@ set(BOOST_INCLUDE_LIBRARIES system)
 set(BOOST_ENABLE_CMAKE ON)
 FetchContent_MakeAvailable(boost)
 
-# Bridge modern Boost target to old FindBoost macro lookup
-if(TARGET Boost::headers)
-    get_target_property(Boost_INCLUDE_DIR Boost::headers INTERFACE_INCLUDE_DIRECTORIES)
-    set(Boost_INCLUDE_DIR "${Boost_INCLUDE_DIR}" CACHE PATH "Boost include directory" FORCE)
-endif()
+# Provide a concrete, non-generator-expression path for libtorrent's old FindBoost macro
+set(Boost_INCLUDE_DIR "${boost_SOURCE_DIR}/libs/headers/include" CACHE PATH "Boost include directory" FORCE)
+set(Boost_FOUND TRUE CACHE BOOL "" FORCE)
 
 # 2. Configure libtorrent to use built-in crypto and disable WebTorrent
 set(crypto "built-in" CACHE STRING "" FORCE)
