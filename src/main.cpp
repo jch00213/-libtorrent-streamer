@@ -23,6 +23,14 @@ int main(int argc, char* argv[]) {
     pack.set_bool(libtorrent::settings_pack::enable_lsd, true);
     pack.set_bool(libtorrent::settings_pack::enable_upnp, true);
 
+    // CRITICAL: Explicitly enable alert categories so progress and status updates aren't dropped
+    pack.set_int(libtorrent::settings_pack::alert_mask, 
+        libtorrent::alert_category::status_notification | 
+        libtorrent::alert_category::error_notification | 
+        libtorrent::alert_category::torrent_log | 
+        libtorrent::alert_category::storage_notification
+    );
+
     libtorrent::session ses(pack);
 
     libtorrent::add_torrent_params atp;
