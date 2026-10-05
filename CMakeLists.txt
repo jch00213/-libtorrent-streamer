@@ -14,18 +14,16 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -flto -DNDEBUG")
 
 include(FetchContent)
 
-# 1. Fetch Boost
+# 1. Fetch Boost via source archive
 FetchContent_Declare(
     boost
-    GIT_REPOSITORY https://github.com/boostorg/boost.git
-    GIT_TAG        boost-1.92.0
+    URL https://archives.boost.io/release/1.92.0/source/boost_1_92_0.tar.gz
 )
 set(BOOST_INCLUDE_LIBRARIES system)
 set(BOOST_ENABLE_CMAKE ON)
 FetchContent_MakeAvailable(boost)
 
-# Point libtorrent's legacy FindBoost module to the correct modern include path
-set(Boost_INCLUDE_DIR "${boost_SOURCE_DIR}/include" CACHE PATH "Boost include directory" FORCE)
+set(Boost_INCLUDE_DIR "${boost_SOURCE_DIR}" CACHE PATH "Boost include directory" FORCE)
 set(Boost_FOUND TRUE CACHE BOOL "" FORCE)
 
 # 2. Configure libtorrent to use built-in crypto and disable WebTorrent
