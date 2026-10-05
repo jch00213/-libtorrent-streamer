@@ -45,7 +45,8 @@ add_executable(torrentd
     src/main.cpp
 )
 
+# FIXED: Link against the correct CMake target exported by the library
 target_link_libraries(torrentd
     PRIVATE
-    libtorrent
+    torrent-rasterbar
 )
