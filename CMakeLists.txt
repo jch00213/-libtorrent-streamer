@@ -18,7 +18,7 @@ include(FetchContent)
 FetchContent_Declare(
     openssl_cmake
     GIT_REPOSITORY https://github.com/viaduck/openssl-cmake.git
-    GIT_TAG        master
+    GIT_TAG        main
 )
 set(CROSS ON)
 set(CROSS_ANDROID ON)
@@ -42,7 +42,7 @@ if(TARGET Boost::headers)
     set(Boost_INCLUDE_DIR "${Boost_INCLUDE_DIR}" CACHE PATH "Boost include directory" FORCE)
 endif()
 
-# 3. Fetch libtorrent-rasterbar (v2.1.2 will now automatically detect OpenSSL)
+# 3. Fetch libtorrent-rasterbar (v2.1.2)
 FetchContent_Declare(
     libtorrent
     GIT_REPOSITORY https://github.com/arvidn/libtorrent.git
